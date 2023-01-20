@@ -1,10 +1,10 @@
-import { wait } from "../utils";
+import { cleanDate, wait } from "../utils";
 import fetch from 'node-fetch';
 
 const CROSS_MINT_SECRET = process.env.CROSS_MINT_SECRET;
 const CROSS_MINT_PROJECT = process.env.CROSS_MINT_PROJECT;
 
-export const cmMintNft = async (pyro: string, amount: string, timestamp: string | number,) => {
+export const cmMintNft = async (pyro: string, amount: string, timestamp: string | number, tokenName: string, txid: string) => {
     if (!CROSS_MINT_SECRET || !CROSS_MINT_PROJECT) {
         console.error('Missing CrossMint credentials')
         return;
@@ -24,11 +24,12 @@ export const cmMintNft = async (pyro: string, amount: string, timestamp: string 
                 image: 'https://www.crossmint.com/assets/crossmint/logo.png',
                 description: 'Test',
                 attributes: [
-                    { trait_type: 'Burn Token', value: 'BONK' },
+                    { trait_type: 'Proof of', value: 'Burn' },
+                    { trait_type: 'Burn Token', value: tokenName },
                     { trait_type: 'Burn Amount', value: amount },
-                    { trait_type: 'wen', value: timestamp },
-                    { trait_type: 'pyro', value: pyro },
-
+                    { trait_type: 'wen', value: cleanDate(timestamp) },
+                    { trait_type: 'Pyro', value: pyro },
+                    { trait_type: 'Proof', value: txid }
                 ]
             }
         })
@@ -46,11 +47,9 @@ export const cmMintNft = async (pyro: string, amount: string, timestamp: string 
     }
     catch (err) {
         console.log(err);
-        //console.error(err);
         return;
     }
 }
-//maxRetries = 5, waitTime = 10000
 export const cmMintStatus = async (id: string, configOpts: MintStatusOptions = { maxRetries: 12, waitTime: 4800 }) => {
     if (!CROSS_MINT_SECRET || !CROSS_MINT_PROJECT) {
         console.error('Missing CrossMint credentials')
