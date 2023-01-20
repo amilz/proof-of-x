@@ -1,7 +1,7 @@
 {
     "functions": {
       "api/crossmint.ts": {
-        "maxDuration": 80
+        "maxDuration": 60
       }
     }
   }
