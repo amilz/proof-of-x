@@ -1,24 +1,25 @@
 import { Client, TextChannel } from 'discord.js';
-const DISCORD_API_TOKEN = process.env.DISCORD_API_TOKEN;
-const CHANNEL_ID = process.env.DISCORD_CHANNEL_ID;
+//const DISCORD_API_TOKEN = process.env.DISCORD_API_TOKEN;
+//const CHANNEL_ID = process.env.DISCORD_CHANNEL_ID;
 
-export async function sendDiscordMsg (message: string):Promise<void> {
+export async function sendDiscordMsg (message: string, channelId: string, token: string):Promise<void> {
     console.log('1');
-    if (!CHANNEL_ID || !DISCORD_API_TOKEN) {
+    if (!channelId || !token) {
         console.log('Unable to auth discord');
         return;
     }
+    console.log('1.5');
     const client = new Client({ intents: ['GuildMessages', 'DirectMessages', 'MessageContent', 'Guilds'] });
-    client.login(DISCORD_API_TOKEN);
+    client.login(token);
     client.once('ready', () => {
         console.log('2');
 
         try {
             console.log('3');
             console.log('   - DCRD: 🤖 Connection Established');
-            const channel = client.channels.cache.get(CHANNEL_ID) as TextChannel;
+            const channel = client.channels.cache.get(channelId) as TextChannel;
             if (!channel) {
-                console.log(`Unable to find channel with id: ${CHANNEL_ID}`);
+                console.log(`Unable to find channel with id: ${channelId}`);
                 return;
             }
             console.log('4');
