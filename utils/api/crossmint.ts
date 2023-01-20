@@ -1,4 +1,5 @@
 import { wait } from "../utils";
+import fetch from 'node-fetch';
 
 const CROSS_MINT_SECRET = process.env.CROSS_MINT_SECRET;
 const CROSS_MINT_PROJECT = process.env.CROSS_MINT_PROJECT;
@@ -36,8 +37,6 @@ export const cmMintNft = async (pyro: string, amount: string, timestamp: string 
     try {
         let response = await fetch('https://staging.crossmint.com/api/2022-06-09/collections/default-solana/nfts', options)
         let result = (await response.json()) as CmMintResponse;
-        console.log(result);
-        console.log('id', result.id);
         let mintResults = await cmMintStatus(result.id);
         return {
             id: result.id,
