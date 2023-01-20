@@ -37,7 +37,7 @@ export default async function handler(
   if (!request.headers.authorization) {
     return response.status(400).json({ error: 'No credentials sent.' });
   }
-  if (!(request.headers.authorization === AUTH_CODE)) {
+  if (request.headers.authorization !== AUTH_CODE) {
     return response.status(403).json({ error: 'Invalid authorization.' });
   }
 
