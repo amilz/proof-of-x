@@ -1,9 +1,10 @@
 import { cmMintNft } from '@/utils/api/crossmint';
+import { shortHash } from '@/utils/utils';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 const AUTH_CODE = process.env.AUTH_CODE;
-const MIN_BURN = 1000000;
-const TOKEN_MINT = 'DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263';
+const MIN_BURN = Number(process.env.MIN_BURN_AMT);
+const TOKEN_MINT = process.env.TOKEN_MINT;
 
 interface TokenTransfer {
   fromAccount: string,
@@ -15,18 +16,15 @@ interface TokenTransfer {
   tokenStandard: string
 }
 
-
-
 export default async function handler(
   request: NextApiRequest,
   response: NextApiResponse,
 ) {
   const { body } = request;
 
-  // STEP 1 AUTHORIZE USER
+  // STEP 1 AUTHORIZE POST
   if (request.method !== 'POST') {
     return response.status(405).json({ error: 'Method Not Allowed.' });
-
   }
   if (!request.headers.authorization) {
     return response.status(400).json({ error: 'No credentials sent.' });
@@ -34,52 +32,54 @@ export default async function handler(
   if (!(request.headers.authorization === AUTH_CODE)) {
     return response.status(403).json({ error: 'Invalid authorization.' });
   }
-  
 
   // STEP 2 VERIFY BURN
-
   let data = body[0];
-  if (!data) {
-    console.log('No data found.');
-    return;
+  if (!data || !body || !body.length) {
+    return response.status(400).json('No data in body.');
   }
-  if (data.type !== 'BURN') {
-    console.log('Data wrong type.');
-    return;
+  if (!data.type || data.type !== 'BURN' || !data.tokenTransfers) {
+    return response.status(400).json('Data wrong type.');
   }
-
   let tokenTransfers = data.tokenTransfers as TokenTransfer[];
-
-  let burnTx = tokenTransfers.find(transfer =>  {return (
-    (transfer.mint == TOKEN_MINT) && 
-    !transfer.toTokenAccount && // Helius shows burns and transfers to nobody
-    !transfer.toUserAccount  // ^^
-  )})
+  // Find the tx for specified mint and verify reciever is null (Helius shows burns and transfers to nobody)
+  let burnTx = tokenTransfers.find(transfer => {
+    return (
+      (transfer.mint == TOKEN_MINT) &&
+      !transfer.toTokenAccount &&
+      !transfer.toUserAccount
+    )
+  })
   if (!burnTx) {
     console.log('No burn transaction found.');
-    return;
+    return response.status(400).json('No burn tranfer found');
   }
   if (burnTx.tokenAmount < MIN_BURN) {
     console.log(`${burnTx.tokenAmount} tokens burned is less than threshold.`);
-    return;
+    return response.status(200).json('Smol burn');
   }
 
-  let result = {
+  let {pyro, burnAmount, signature, timestamp} = {
     pyro: burnTx.fromUserAccount, // use the owner of the burned tokens
     burnAmount: burnTx.tokenAmount.toLocaleString(undefined, { maximumFractionDigits: 0 }),
     signature: data.signature,
     timestamp: data.timestamp
   }
-
-  console.log(result);
+  console.log('Requesting NFT Mint:');
+  console.log(`   - Pyro: ${shortHash(pyro)}`);
+  console.log(`   - Burn: ${burnAmount} $BONK`);
+  console.log(`   - TxId: ${shortHash(signature)}`);
+  console.log(`   - Time: ${timestamp}`);
 
   // Step 3 - Mint NFT
-  let newMint = await cmMintNft(result.pyro, result.burnAmount, result.timestamp)
-  if (!newMint || !newMint.id) return;
-  if (!newMint.details) {console.log(`New mint not found for ${newMint.id}.`); return;}
-  console.log(`${result.pyro} burned ${result.burnAmount} BONK and got an NFT!`);
-  console.log(`Mint Address: ${newMint.details.onChain.mintHash}`);
-  response.status(200).json('🔥');
-
-  return;
+  try {
+    let newMint = await cmMintNft(pyro, burnAmount, timestamp)
+    if (!newMint || !newMint.id) { return response.status(204).json('No response from CM'); };
+    if (!newMint.details) { console.log(`New mint not found for ${newMint.id}.`); return response.status(202).json('Mint status unknown'); }
+    console.log(`   - Mint: ${newMint.details.onChain.mintHash}`);
+    return response.status(200).json('🔥🔥🔥');
+  }
+  catch {
+    return response.status(204).end();
+  }
 }
