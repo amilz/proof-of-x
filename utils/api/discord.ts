@@ -1,6 +1,7 @@
 import { Client, TextChannel } from 'discord.js';
 //const DISCORD_API_TOKEN = process.env.DISCORD_API_TOKEN;
 //const CHANNEL_ID = process.env.DISCORD_CHANNEL_ID;
+import { once } from "node:events"
 
 export async function sendDiscordMsg(message: string, channelId: string, token: string): Promise<void> {
     console.log('1');
@@ -8,28 +9,16 @@ export async function sendDiscordMsg(message: string, channelId: string, token: 
         console.log('Unable to auth discord');
         return;
     }
-    console.log('1.1');
+    console.log('1.1 - env set');
     const client = new Client({ intents: ['GuildMessages', 'DirectMessages', 'MessageContent', 'Guilds'] });
-    console.log('1.2');
-    const x = await client.login(token);
-    console.log('login', client.isReady())
-    console.log('login-post-5', client.isReady())
-
-
-    await new Promise<void>((resolve, reject) => {
-        client.once("error", reject);
-        client.once("ready", () => {
-            client.off("error", reject)
-            resolve();
-        });
-    });
-
-
-    /*     client.once('ready', () => { */
-    console.log('2');
+    console.log('1.2 - new Client');
+    await client.login(token);
+    console.log('1.3 - logged in')
+    await once(client, "ready")
+    console.log('1.4 - ready')
 
     try {
-        console.log('3');
+        console.log('2');
         console.log('   - DCRD: 🤖 Connection Established');
         let x = await client.channels.fetch(channelId)
         const channel = client.channels.cache.get(channelId) as TextChannel;
@@ -37,9 +26,9 @@ export async function sendDiscordMsg(message: string, channelId: string, token: 
             console.log(`Unable to find channel with id: ${channelId}`);
             return;
         }
-        console.log('4');
+        console.log('3');
         channel.send(message).then(() => { console.log('   - DCRD: Message sent to server') });
-        console.log('5');
+        console.log('4');
         return;
     }
     catch (error) {
