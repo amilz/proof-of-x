@@ -1,10 +1,12 @@
 import { cmMintNft } from '@/utils/api/crossmint';
-import { shortHash } from '@/utils/utils';
+import { sendDiscordMsg } from '@/utils/api/discord';
+import { generateExplorerUrl, shortHash } from '@/utils/utils';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 const AUTH_CODE = process.env.AUTH_CODE;
 const MIN_BURN = Number(process.env.MIN_BURN_AMT);
 const TOKEN_MINT = process.env.TOKEN_MINT;
+const NOTIFY_DISCORD = true; // set false if no Discord
 const envVars = [AUTH_CODE, MIN_BURN, TOKEN_MINT, process.env.CROSS_MINT_SECRET, process.env.CROSS_MINT_PROJECT ];
 
 interface TokenTransfer {
@@ -81,6 +83,7 @@ export default async function handler(
     if (!newMint || !newMint.id) { return response.status(204).json('No response from CM'); };
     if (!newMint.details) { console.log(`New mint not found for ${newMint.id}.`); return response.status(202).json('Mint status unknown'); }
     console.log(`   - Mint: ${newMint.details.onChain.mintHash}`);
+    if (NOTIFY_DISCORD) {sendDiscordMsg(`${shortHash(pyro)} burned ${burnAmount} $BONK and got this NFT: ${shortHash(newMint.details.onChain.mintHash)}\n<${generateExplorerUrl('','devnet',newMint.details.onChain.mintHash)}>`);}
     return response.status(200).json('🔥🔥🔥');
   }
   catch {
