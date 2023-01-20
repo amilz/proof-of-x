@@ -36,8 +36,8 @@ export const cmMintNft = async (pyro: string, amount: string, timestamp: string 
 
     try {
         console.log('1-Making CM Request');
-
         let response = await fetch('https://staging.crossmint.com/api/2022-06-09/collections/default-solana/nfts', options);
+        console.log(response);
         console.log('2-Fetch Complete');
 
         let result = (await response.json()) as CmMintResponse;
@@ -49,7 +49,8 @@ export const cmMintNft = async (pyro: string, amount: string, timestamp: string 
         };
     }
     catch (err) {
-        console.error(err);
+        console.log(err);
+        //console.error(err);
         return;
     }
 }
