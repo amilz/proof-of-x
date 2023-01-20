@@ -43,14 +43,14 @@ export default async function handler(
   }
 
   // STEP 2 VERIFY BURN
-  let data = body[0];
+  const data = body[0];
   if (!data || !body || !body.length) {
     return response.status(400).json('No data in body.');
   }
   if (!data.type || data.type !== 'BURN' || !data.tokenTransfers) {
     return response.status(400).json('Data wrong type.');
   }
-  let tokenTransfers = data.tokenTransfers as TokenTransfer[];
+  const tokenTransfers: TokenTransfer[] = data.tokenTransfers;
   // Find the tx for specified mint and verify reciever is null (Helius shows burns and transfers to nobody)
   let burnTx = tokenTransfers.find(transfer => {
     return (
@@ -63,29 +63,27 @@ export default async function handler(
     console.log('No burn transaction found.');
     return response.status(400).json('No burn tranfer found');
   }
+
+  const pyro = burnTx.fromUserAccount; // use the owner of the burned tokens
+  const burnAmount = burnTx.tokenAmount.toLocaleString(undefined, { maximumFractionDigits: 0 });
+  const { signature, timestamp } = data;
+  
   if (burnTx.tokenAmount < MIN_BURN) {
-    console.log(`${burnTx.tokenAmount} tokens burned is less than threshold.`);
+    console.log(`${burnAmount} tokens burned is less than threshold.`);
     return response.status(200).json('Smol burn');
   }
 
-  let { pyro, burnAmount, signature, timestamp } = {
-    pyro: burnTx.fromUserAccount, // use the owner of the burned tokens
-    burnAmount: burnTx.tokenAmount.toLocaleString(undefined, { maximumFractionDigits: 0 }),
-    signature: data.signature,
-    timestamp: data.timestamp
-  }
   console.log('Requesting NFT Mint:');
   console.log(`   - Pyro: ${shortHash(pyro)}`);
   console.log(`   - Burn: ${burnAmount} $${TOKEN_NAME}`);
   console.log(`   - TxId: ${shortHash(signature)}`);
-  console.log(`   - Time: ${cleanDate(timestamp)}`);
 
   // Step 3 - Mint NFT
   try {
     let newMint = await cmMintNft(pyro, burnAmount, timestamp, TOKEN_NAME, signature);
     if (!newMint || !newMint.id) { return response.status(204).json('No response from CM'); };
     if (!newMint.details) { console.log(`New mint not found for ${newMint.id}.`); return response.status(202).json('Mint status unknown'); }
-    console.log(`   - Mint: ${newMint.details.onChain.mintHash}`);
+    console.log(`   ✅ Mint: ${newMint.details.onChain.mintHash}`);
     if (NOTIFY_DISCORD && CHANNEL_ID && DISCORD_API_TOKEN) {
       await sendDiscordMsg(
         `${shortHash(pyro)} burned ${burnAmount} $${TOKEN_NAME} and got this NFT: ${shortHash(newMint.details.onChain.mintHash)} <${generateExplorerUrl('', 'devnet', newMint.details.onChain.mintHash)}>`,

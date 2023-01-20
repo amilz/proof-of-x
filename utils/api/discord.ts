@@ -12,7 +12,7 @@ export async function sendDiscordMsg(message: string, channelId: string, token: 
     try {
         await client.login(token);
         await once(client, "ready");
-        console.log('   - DCRD: 🤖 Connection Established');
+        console.log('   ✅ DCRD: 🤖 Connection Established');
     }
     catch {
         console.log(`   ❌ DCRD: Connection error.`);
@@ -20,14 +20,14 @@ export async function sendDiscordMsg(message: string, channelId: string, token: 
     }
 
     try {
-        let x = await client.channels.fetch(channelId)
+        await client.channels.fetch(channelId);
         const channel = client.channels.cache.get(channelId) as TextChannel;
         if (!channel) {
             console.log(`   ❌ DCRD: Unable to find channel with id: ${channelId}`);
             return;
         }
         await channel.send(message);
-        console.log('   - DCRD: Message sent to server');
+        console.log('   ✅ DCRD: Message sent to server');
         return;
     }
     catch (error) {
@@ -36,7 +36,7 @@ export async function sendDiscordMsg(message: string, channelId: string, token: 
     }
     finally {
         client.destroy();
-        console.log('   - DCRD: 🤖 Connection destroyed');
+        console.log('   ✅ DCRD: 🤖 Connection destroyed');
         return;
     }
 
