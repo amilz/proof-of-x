@@ -86,7 +86,6 @@ export default async function handler(
     if (!newMint.details) { console.log(`New mint not found for ${newMint.id}.`); return response.status(202).json('Mint status unknown'); }
     console.log(`   - Mint: ${newMint.details.onChain.mintHash}`);
     console.log(NOTIFY_DISCORD);
-    console.log(NOTIFY_DISCORD && CHANNEL_ID && DISCORD_API_TOKEN);
     if (NOTIFY_DISCORD && CHANNEL_ID && DISCORD_API_TOKEN) {await sendDiscordMsg(
       `${shortHash(pyro)} burned ${burnAmount} $BONK and got this NFT: ${shortHash(newMint.details.onChain.mintHash)} <${generateExplorerUrl('','devnet',newMint.details.onChain.mintHash)}>`,
       CHANNEL_ID,

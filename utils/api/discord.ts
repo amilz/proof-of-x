@@ -8,8 +8,9 @@ export async function sendDiscordMsg (message: string, channelId: string, token:
         console.log('Unable to auth discord');
         return;
     }
-    console.log('1.5');
+    console.log('1.1');
     const client = new Client({ intents: ['GuildMessages', 'DirectMessages', 'MessageContent', 'Guilds'] });
+    console.log('1.2');
     client.login(token);
     client.once('ready', () => {
         console.log('2');
