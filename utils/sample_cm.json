@@ -1,0 +1,22 @@
+{
+    "id": "4f2823c4-cb1a-488e-80d4-dc1c95b27ec7",
+    "metadata": {
+      "name": "My first Mint API NFT",
+      "symbol": "",
+      "description": "My NFT created via the mint API!",
+      "seller_fee_basis_points": 0,
+      "image": "https://www.crossmint.com/assets/crossmint/logo.png",
+      "attributes": [],
+      "properties": {
+        "files": [],
+        "category": "image",
+        "creators": []
+      }
+    },
+    "onChain": {
+      "status": "success",
+      "mintHash": "6jDgDn2h64xWusoU6jNhgoT5EQ73GJHsbPKt6Xf5XeXp",
+      "owner": "5WpDyJ2fUnh7dHG2HRive2S8bS57WYodRX1wPKa1QRYZ",
+      "chain": "solana"
+    }
+  }

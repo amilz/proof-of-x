@@ -1,5 +1,5 @@
-import next, { NextApiRequest, NextApiResponse } from 'next';
-import { stringify } from 'querystring';
+import { cmMintNft } from '@/utils/api/crossmint';
+import { NextApiRequest, NextApiResponse } from 'next';
 
 const AUTH_CODE = process.env.AUTH_CODE;
 const MIN_BURN = 1000000;
@@ -17,7 +17,7 @@ interface TokenTransfer {
 
 
 
-export default function handler(
+export default async function handler(
   request: NextApiRequest,
   response: NextApiResponse,
 ) {
@@ -56,7 +56,6 @@ export default function handler(
     !transfer.toTokenAccount && // Helius shows burns and transfers to nobody
     !transfer.toUserAccount  // ^^
   )})
-  console.log('BurnTx:',burnTx);
   if (!burnTx) {
     console.log('No burn transaction found.');
     return;
@@ -68,14 +67,18 @@ export default function handler(
 
   let result = {
     pyro: burnTx.fromUserAccount, // use the owner of the burned tokens
-    burnAmount: burnTx.tokenAmount,
+    burnAmount: burnTx.tokenAmount.toLocaleString(undefined, { maximumFractionDigits: 0 }),
     signature: data.signature,
     timestamp: data.timestamp
   }
 
   console.log(result);
 
-
-  
-
+  // Step 3 - Mint NFT
+  let newMint = await cmMintNft(result.pyro, result.burnAmount, result.timestamp)
+  if (!newMint || !newMint.id) return;
+  if (!newMint.details) {console.log(`New mint not found for ${newMint.id}.`); return;}
+  console.log(`${result.pyro} burned ${result.burnAmount} BONK and got an NFT!`);
+  console.log(`Mint Address: ${newMint.details.onChain.mintHash}`);
+  return;
 }
