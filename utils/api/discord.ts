@@ -1,6 +1,4 @@
 import { Client, TextChannel } from 'discord.js';
-//const DISCORD_API_TOKEN = process.env.DISCORD_API_TOKEN;
-//const CHANNEL_ID = process.env.DISCORD_CHANNEL_ID;
 import { once } from "node:events"
 
 export async function sendDiscordMsg(message: string, channelId: string, token: string): Promise<void> {
@@ -8,6 +6,7 @@ export async function sendDiscordMsg(message: string, channelId: string, token: 
         console.log('Unable to auth discord');
         return;
     }
+    
     const client = new Client({ intents: ['GuildMessages', 'DirectMessages', 'MessageContent', 'Guilds'] });
 
     try {
@@ -27,11 +26,16 @@ export async function sendDiscordMsg(message: string, channelId: string, token: 
             console.log(`Unable to find channel with id: ${channelId}`);
             return;
         }
-        channel.send(message).then(() => { console.log('   - DCRD: Message sent to server') });
+        channel.send(message).then(() => { 
+            console.log('   - DCRD: Message sent to server');
+            client.destroy();
+            console.log('   - DCRD: 🤖 Connection destroyed');
+         });
         return;
     }
     catch (error) {
         console.log(`Discord client error: ${error}`);
         return;
     }
+
 }
