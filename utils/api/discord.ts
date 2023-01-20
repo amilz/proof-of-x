@@ -17,8 +17,10 @@ export function sendDiscordMsg (message: string):void {
                 return;
             }
             channel.send(message);
+            console.log('Discord message sent to server');
         }
         catch (error) {
+            console.log(`Discord client error: ${error}`);
         }
     });
     client.on("error", (error: Error) => {
