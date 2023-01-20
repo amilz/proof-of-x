@@ -34,7 +34,6 @@ export default async function handler(
   if (!(request.headers.authorization === AUTH_CODE)) {
     return response.status(403).json({ error: 'Invalid authorization.' });
   }
-  response.status(200).json('🔥');
   
 
   // STEP 2 VERIFY BURN
@@ -80,5 +79,7 @@ export default async function handler(
   if (!newMint.details) {console.log(`New mint not found for ${newMint.id}.`); return;}
   console.log(`${result.pyro} burned ${result.burnAmount} BONK and got an NFT!`);
   console.log(`Mint Address: ${newMint.details.onChain.mintHash}`);
+  response.status(200).json('🔥');
+
   return;
 }
