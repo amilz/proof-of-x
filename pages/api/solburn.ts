@@ -75,6 +75,7 @@ export default async function handler(
   console.log(result);
 
   // Step 3 - Mint NFT
+  console.log('1-Initiating CM Request.');
   let newMint = await cmMintNft(result.pyro, result.burnAmount, result.timestamp)
   if (!newMint || !newMint.id) return;
   if (!newMint.details) {console.log(`New mint not found for ${newMint.id}.`); return;}

@@ -5,10 +5,12 @@ const CROSS_MINT_SECRET = process.env.CROSS_MINT_SECRET;
 const CROSS_MINT_PROJECT = process.env.CROSS_MINT_PROJECT;
 
 export const cmMintNft = async (pyro: string, amount: string, timestamp: string | number,) => {
+    console.log('2-CM Request Submitted');
     if (!CROSS_MINT_SECRET || !CROSS_MINT_PROJECT) {
         console.error('Missing CrossMint credentials')
         return;
     }
+    console.log('3-CM Validated');
 
     const options = {
         method: 'POST',
@@ -38,6 +40,7 @@ export const cmMintNft = async (pyro: string, amount: string, timestamp: string 
         let response = await fetch('https://staging.crossmint.com/api/2022-06-09/collections/default-solana/nfts', options)
         let result = (await response.json()) as CmMintResponse;
         let mintResults = await cmMintStatus(result.id);
+        console.log(`CrossMint Tx ID: ${result.id}`)
         return {
             id: result.id,
             details: mintResults
