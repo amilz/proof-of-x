@@ -83,7 +83,7 @@ export default async function handler(
     if (!newMint || !newMint.id) { return response.status(204).json('No response from CM'); };
     if (!newMint.details) { console.log(`New mint not found for ${newMint.id}.`); return response.status(202).json('Mint status unknown'); }
     console.log(`   - Mint: ${newMint.details.onChain.mintHash}`);
-    if (NOTIFY_DISCORD) {sendDiscordMsg(`${shortHash(pyro)} burned ${burnAmount} $BONK and got this NFT: ${shortHash(newMint.details.onChain.mintHash)}\n<${generateExplorerUrl('','devnet',newMint.details.onChain.mintHash)}>`);}
+    if (NOTIFY_DISCORD) {await sendDiscordMsg(`${shortHash(pyro)} burned ${burnAmount} $BONK and got this NFT: ${shortHash(newMint.details.onChain.mintHash)}\n<${generateExplorerUrl('','devnet',newMint.details.onChain.mintHash)}>`);}
     return response.status(200).json('🔥🔥🔥');
   }
   catch {
