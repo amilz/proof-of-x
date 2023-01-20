@@ -9,7 +9,7 @@ const TOKEN_MINT = process.env.TOKEN_MINT;
 const DISCORD_API_TOKEN = process.env.DISCORD_API_TOKEN;
 const CHANNEL_ID = process.env.DISCORD_CHANNEL_ID;
 const NOTIFY_DISCORD = true; // set false if no Discord
-const envVars = [AUTH_CODE, MIN_BURN, TOKEN_MINT, process.env.CROSS_MINT_SECRET, process.env.CROSS_MINT_PROJECT ];
+const envVars = [AUTH_CODE, MIN_BURN, TOKEN_MINT, process.env.CROSS_MINT_SECRET, process.env.CROSS_MINT_PROJECT];
 
 interface TokenTransfer {
   fromAccount: string,
@@ -28,7 +28,7 @@ export default async function handler(
   const { body } = request;
   // CHECK ENV VAR SET
   for (const env of envVars) {
-    if (!env) {return response.status(500).json({ error: 'Missing environment variable' })}
+    if (!env) { return response.status(500).json({ error: 'Missing environment variable' }) }
   };
   // STEP 1 AUTHORIZE POST
   if (request.method !== 'POST') {
@@ -67,7 +67,7 @@ export default async function handler(
     return response.status(200).json('Smol burn');
   }
 
-  let {pyro, burnAmount, signature, timestamp} = {
+  let { pyro, burnAmount, signature, timestamp } = {
     pyro: burnTx.fromUserAccount, // use the owner of the burned tokens
     burnAmount: burnTx.tokenAmount.toLocaleString(undefined, { maximumFractionDigits: 0 }),
     signature: data.signature,
@@ -81,16 +81,17 @@ export default async function handler(
 
   // Step 3 - Mint NFT
   try {
-    let newMint = await cmMintNft(pyro, burnAmount, timestamp)
+    let newMint = await cmMintNft(pyro, burnAmount, timestamp);
     if (!newMint || !newMint.id) { return response.status(204).json('No response from CM'); };
     if (!newMint.details) { console.log(`New mint not found for ${newMint.id}.`); return response.status(202).json('Mint status unknown'); }
     console.log(`   - Mint: ${newMint.details.onChain.mintHash}`);
-    console.log(NOTIFY_DISCORD);
-    if (NOTIFY_DISCORD && CHANNEL_ID && DISCORD_API_TOKEN) {await sendDiscordMsg(
-      `${shortHash(pyro)} burned ${burnAmount} $BONK and got this NFT: ${shortHash(newMint.details.onChain.mintHash)} <${generateExplorerUrl('','devnet',newMint.details.onChain.mintHash)}>`,
-      CHANNEL_ID,
-      DISCORD_API_TOKEN
-    );}
+    if (NOTIFY_DISCORD && CHANNEL_ID && DISCORD_API_TOKEN) {
+      await sendDiscordMsg(
+        `${shortHash(pyro)} burned ${burnAmount} $BONK and got this NFT: ${shortHash(newMint.details.onChain.mintHash)} <${generateExplorerUrl('', 'devnet', newMint.details.onChain.mintHash)}>`,
+        CHANNEL_ID,
+        DISCORD_API_TOKEN
+      );
+    }
     return response.status(200).json('🔥🔥🔥');
   }
   catch {
