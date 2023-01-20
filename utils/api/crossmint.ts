@@ -51,11 +51,12 @@ export const cmMintNft = async (pyro: string, amount: string, timestamp: string 
     }
 }
 //maxRetries = 5, waitTime = 10000
-export const cmMintStatus = async (id: string, configOpts: MintStatusOptions = { maxRetries: 5, waitTime: 10000 }) => {
+export const cmMintStatus = async (id: string, configOpts: MintStatusOptions = { maxRetries: 10, waitTime: 4800 }) => {
     if (!CROSS_MINT_SECRET || !CROSS_MINT_PROJECT) {
         console.error('Missing CrossMint credentials')
         return;
     }
+    wait(10000); // Allow some tx processing time 49s 
     let success = false;
     let numTries = 0;
 
