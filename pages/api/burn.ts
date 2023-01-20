@@ -5,6 +5,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 const AUTH_CODE = process.env.AUTH_CODE;
 const MIN_BURN = Number(process.env.MIN_BURN_AMT);
 const TOKEN_MINT = process.env.TOKEN_MINT;
+const envVars = [AUTH_CODE, MIN_BURN, TOKEN_MINT, process.env.CROSS_MINT_SECRET, process.env.CROSS_MINT_PROJECT ];
 
 interface TokenTransfer {
   fromAccount: string,
@@ -21,7 +22,10 @@ export default async function handler(
   response: NextApiResponse,
 ) {
   const { body } = request;
-
+  // CHECK ENV VAR SET
+  for (const env of envVars) {
+    if (!env) {return response.status(500).json({ error: 'Missing environment variable' })}
+  };
   // STEP 1 AUTHORIZE POST
   if (request.method !== 'POST') {
     return response.status(405).json({ error: 'Method Not Allowed.' });
