@@ -8,6 +8,20 @@ This is a serverless function that handles a POST request from Helius on Vercel 
 - It extracts the `tokenTransfer` array from the body, and verifies that the tokens burned is greater than the `MIN_BURN` constant. 
 - If the amount of tokens burned is greater than the `MIN_BURN` constant, we send a call to CrossMint to mint an NFT to the burner or `pyro`.
 
+
+### Potential Limitations
+
+At present (Jan 21, 2023):
+- Webhooks: 
+    - BURN Feed does not include inner tx Burns (e.g., burns associated with a Candy Machine mint)
+    - BURN Feed does not include BurnChecked tx's
+- Vercel: 
+    - Base plan is limited to 10s executions (which is only enough time to send a CM request)
+    - Pro plan is limited to 60s which is sufficient MOST of the time but I have seen some executions time out 
+    - Future phases will have to explore alternatives
+
+
+
 ## Getting Started
 
 ```sh
