@@ -3,18 +3,78 @@ import Image from 'next/image'
 import { Inter } from '@next/font/google'
 import styles from '@/styles/Home.module.css'
 import usePhantom from '@/utils/solana/phantom'
-import { shortHash } from '@/utils/utils'
-import { useCallback } from 'react'
+import { generateExplorerUrl, shortHash } from '@/utils/utils'
+import { useCallback, useState } from 'react'
+import { MIN_BURN_AMT, NUM_DECIMALS, TOKEN_MINT } from '@/utils/constants'
+import { createBurnCheckedInstruction } from '@solana/spl-token'
+import { PublicKey, Transaction, TransactionInstruction } from '@solana/web3.js'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
-  const { provider, balance, tokenBalance, logs, pubKey, connect, disconnect, isConnected } = usePhantom();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [complete, setComplete] = useState<boolean>(false);
+  const [resultMsg, setResultMsg] = useState<string>('');
+  const [txid, setTxid] = useState<string>('');
+  const [notice, setNotice] = useState<JSX.Element>(<></>);
+  const { provider, connection, tokenBalance, pubKey, connect, disconnect, isConnected, ata } = usePhantom();
   const handleClick = useCallback(() => {
     if (!isConnected) { connect() }
     else { disconnect() }
   }, [isConnected])
+  const handleBurn = useCallback(async () => {
+    if (!provider) return;
+    if (!pubKey || !ata) return;
+    if (!tokenBalance) return;
+    if (tokenBalance < MIN_BURN_AMT) return;
+    setLoading(true);
+    let burnIx: TransactionInstruction = createBurnCheckedInstruction(
+      ata,
+      new PublicKey(TOKEN_MINT),
+      pubKey,
+      MIN_BURN_AMT * (10**NUM_DECIMALS),
+      NUM_DECIMALS
+    );
+    let burnTx = new Transaction().add(burnIx);
+    const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash();
+    if (!blockhash || !lastValidBlockHeight) return;
+    burnTx.lastValidBlockHeight = lastValidBlockHeight;
+    burnTx.recentBlockhash = blockhash;
+    burnTx.feePayer = pubKey;
 
+    try {
+      const { signature } = await provider.signAndSendTransaction(burnTx);
+      const confirmation = await connection.confirmTransaction({ signature, lastValidBlockHeight, blockhash },'confirmed');
+      if (confirmation.value.err) {
+        throw Error("unable to confirm transaciton")
+      }
+      setResultMsg('🔥 BURN SUCCESS 🔥');
+      setTxid(signature);
+      setNotice(<>Proof of X is now listening for this transaction on chain.
+        <br />You should recieve an NFT airdrop shortly!
+        <br />Keep an eye on your wallet...</>
+      )
+    }
+    catch {
+      setResultMsg('💥 BONK! 💥');
+      setNotice(<>Something went wrong with your transaction.
+        <br />Take a breather and try again!</>
+      )
+    }
+    finally {
+      setComplete(true);
+      setLoading(false);
+    }
+
+
+  }, [pubKey, tokenBalance])
+  const handleReset = useCallback(()=>{
+    setLoading(false);
+    setComplete(false);
+    setResultMsg('');
+    setTxid('');
+    setNotice(<></>);
+  },[])
   return (
     <>
       <Head>
@@ -24,6 +84,24 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
+        {/* MODAL TEXT */}
+        <div className={complete ? 'modal' : 'hide'}>
+          <div className='modal-content'>
+            {/* CLOSE BUTTON */}
+            <span className="close" onClick={handleReset}>&times;</span>
+
+            <div className='result-msg'>{resultMsg}</div>
+            {notice}<br /><br />
+            {txid && <>Tx: <a
+              href={generateExplorerUrl(txid, 'mainnet-beta')}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {shortHash(txid)}
+            </a></>}
+          </div>
+        </div>
+        {/* BODY */}
         <div className={styles.description}>
           <p >
             <span className={styles.title}>Proof of X</span> <br /> <span className={styles.subhead}>Real-time rewards for on-chain events</span>
@@ -47,17 +125,22 @@ export default function Home() {
         </div>
 
         <div className={styles.center}>
-          <Image
-            src="/burn.png"
-            alt="A burning bonk"
-            className={styles.logo}
-            width={400}
-            height={400}
-            priority
-          />
           <button
+            className={loading ? 'loading' : 'dog-button'}
+            onClick={handleBurn}
+            disabled={!isConnected || ((tokenBalance ?? 0) < MIN_BURN_AMT || loading)}
+          >
+            <Image
+              src="/burn.png"
+              alt="A burning bonk"
+              className={styles.logo}
+              width={400}
+              height={400}
+              priority
+            />
+          </button>
+          {!isConnected ? <button
             className={styles.card}
-            style={{ textAlign: 'left' }}
             onClick={handleClick}
           >
             <h2 className={inter.className}>
@@ -66,17 +149,27 @@ export default function Home() {
             <p className={inter.className}>
               Earn a Proof of Burn NFT<br />by burning 1M BONK
             </p><br />
-            {!isConnected ?
+
+            <p className={inter.className}>
+              🔴 Not Connected <br /><span className={styles.walletDetails}><i>click here to connect</i></span>
+            </p>
+          </button> :
+            <button
+              className={styles.card}
+              onClick={handleClick}
+            >
+              <h2 className={inter.className}>
+                {((tokenBalance ?? 0) >= MIN_BURN_AMT) ? '🔥Click Dog to Burn🔥' : 'MORE BONK NEEDED'}
+              </h2>
               <p className={inter.className}>
-                🔴 Not Connected <small><i>click here</i></small>
-              </p> :
+                Burn 1M BONK -&gt;Get  NFT<br /><i >WARNING: Burn is irreversible</i>
+              </p><br />
               <p className={inter.className}>
-                🟢 Connected <span className={styles.walletDetails}><i>{shortHash(pubKey?.toString())}</i></span>
-              </p>}
-          </button>
+                🟢 Connected to {shortHash(pubKey?.toString())} <br /><span className={styles.walletDetails}><i>click to disconnect</i></span>
+              </p>
+            </button>}
 
         </div>
-
         <div className={styles.grid}>
           <a
             href="#"

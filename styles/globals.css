@@ -109,3 +109,79 @@ a {
 button {
   cursor: pointer !important;
 }
+
+.dog-button {
+  background: none;
+  border: none;
+}
+
+.dog-button:hover  {
+  transform: scale(1.05) translate(0, 0);
+}
+
+.loading {
+  background:none;
+  border:none;
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s 10s, opacity 10s linear;
+}
+
+.modal {
+  display: block; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 10; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+.modal-content {
+  background-color: #d2d2d2ce;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  color: black;
+  width: 40%; /* Could be more or less, depending on screen size */
+  min-height: 40%;
+  border-radius: 10px;
+  font-family: var(--font-mono);
+  padding: 50px;
+}
+/* Tablet and Smaller Desktop */
+@media (max-width: 777px) {
+  .modal-content {
+    width: 90%;
+    height: 90%;
+  }
+}
+
+/* The Close Button */
+.close {
+  color: rgb(0, 0, 0);
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: rgb(38, 38, 38);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.hide {
+  display: none;
+}
+
+.result-msg {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-size: larger;
+  font-weight: bold;
+}

@@ -1,3 +1,4 @@
+import { getAssociatedTokenAddress } from "@solana/spl-token";
 import { Connection, LAMPORTS_PER_SOL, PublicKey, Transaction, } from "@solana/web3.js";
 import { useEffect, useState } from "react";
 import { NETWORK, TOKEN_MINT } from '../constants';
@@ -10,7 +11,8 @@ type PhantomRequestMethod =
     | "disconnect"
     | "signTransaction"
     | "signAllTransactions"
-    | "signMessage";
+    | "signMessage"
+    | "signAndSendTransaction";
 
 interface ConnectOpts {
     onlyIfTrusted: boolean;
@@ -20,6 +22,7 @@ interface PhantomProvider {
     publicKey: PublicKey | null;
     isConnected: boolean | null;
     signTransaction: (transaction: Transaction) => Promise<Transaction>;
+    signAndSendTransaction: (transaction: Transaction)=>Promise<{publicKey:string, signature: string}>;
     signAllTransactions: (transactions: Transaction[]) => Promise<Transaction[]>;
     signMessage: (
         message: Uint8Array | string,
@@ -42,7 +45,7 @@ export interface UsePhantom {
 const getProvider = (): PhantomProvider | undefined => {
     if ("solana" in window) {
         const anyWindow: any = window;
-        const provider = anyWindow.solana;
+        const provider = anyWindow.phantom.solana;
         if (provider.isPhantom) {
             return provider;
         }
@@ -55,6 +58,7 @@ function usePhantom() {
     const [provider, setProvider] = useState<PhantomProvider>();
     const [balance, setBalance] = useState<number>();
     const [tokenBalance, setTokenBalance] = useState<number>();
+    const [ata, setAta] = useState<PublicKey>();
     const [pubKey, setPubKey] = useState<PublicKey | null>(null)
     const [logs, setLogs] = useState<string[]>([]);
     const addLog = (log: string) => setLogs([...logs, log]);
@@ -70,7 +74,6 @@ function usePhantom() {
     }, [provider]);
 
     const connect = async () => {
-        console.log('trying');
         if (!provider) return;
         try {
             const res = await provider.connect();
@@ -84,9 +87,11 @@ function usePhantom() {
             });
             if (!TOKEN_MINT) return;
             getTokenBalance(publicKey, connection, new PublicKey(TOKEN_MINT)).then((balance)=>{
-                console.log('connected. bonk:', balance)
+                console.log('connected. bonk:', balance);
                 setTokenBalance(balance);
             })
+            let ata = await getAssociatedTokenAddress(new PublicKey(TOKEN_MINT), publicKey);
+            setAta(ata);
         } catch (err) {
             addLog("Error: " + JSON.stringify(err));
         }
@@ -104,9 +109,11 @@ function usePhantom() {
         }
     };
     return {
+        connection,
         provider,
         balance,
         tokenBalance,
+        ata,
         logs,
         pubKey,
         connect,
