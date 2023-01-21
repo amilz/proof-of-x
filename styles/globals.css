@@ -185,3 +185,37 @@ button {
   font-size: larger;
   font-weight: bold;
 }
+
+.image_wrapper {
+  position: relative;
+  background: none;
+  border: none;
+}
+
+.overlay {
+  position: absolute; 
+  inset: 0;
+  color: white;
+  background: none;
+  /* center overlay text */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: larger;
+}
+
+.blink {
+  margin-top: 50px;
+  animation: blink-animation 1s steps(5, start) infinite;
+  -webkit-animation: blink-animation 1s steps(5, start) infinite;
+}
+@keyframes blink-animation {
+  to {
+    visibility: hidden;
+  }
+}
+@-webkit-keyframes blink-animation {
+  to {
+    visibility: hidden;
+  }
+}

@@ -6,7 +6,7 @@ import usePhantom from '@/utils/solana/phantom'
 import { generateExplorerUrl, shortHash } from '@/utils/utils'
 import { useCallback, useState } from 'react'
 import { MIN_BURN_AMT, NUM_DECIMALS, TOKEN_MINT } from '@/utils/constants'
-import { createBurnCheckedInstruction } from '@solana/spl-token'
+import { createBurnCheckedInstruction, createBurnInstruction } from '@solana/spl-token'
 import { PublicKey, Transaction, TransactionInstruction } from '@solana/web3.js'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -28,11 +28,18 @@ export default function Home() {
     if (!tokenBalance) return;
     if (tokenBalance < MIN_BURN_AMT) return;
     setLoading(true);
-    let burnIx: TransactionInstruction = createBurnCheckedInstruction(
+    let burnIx: TransactionInstruction = createBurnInstruction(
       ata,
       new PublicKey(TOKEN_MINT),
       pubKey,
-      MIN_BURN_AMT * (10**NUM_DECIMALS),
+      MIN_BURN_AMT * (10 ** NUM_DECIMALS)
+    )
+    // At the momeont (2023/1/21), Hook does not appear to include BurnChecked
+    let burnIxChecked: TransactionInstruction = createBurnCheckedInstruction(
+      ata,
+      new PublicKey(TOKEN_MINT),
+      pubKey,
+      MIN_BURN_AMT * (10 ** NUM_DECIMALS),
       NUM_DECIMALS
     );
     let burnTx = new Transaction().add(burnIx);
@@ -44,14 +51,14 @@ export default function Home() {
 
     try {
       const { signature } = await provider.signAndSendTransaction(burnTx);
-      const confirmation = await connection.confirmTransaction({ signature, lastValidBlockHeight, blockhash },'confirmed');
+      const confirmation = await connection.confirmTransaction({ signature, lastValidBlockHeight, blockhash }, 'confirmed');
       if (confirmation.value.err) {
         throw Error("unable to confirm transaciton")
       }
       setResultMsg('🔥 BURN SUCCESS 🔥');
       setTxid(signature);
-      setNotice(<>Proof of X is now listening for this transaction on chain.
-        <br />You should recieve an NFT airdrop shortly!
+      setNotice(<>Proof of X is now listening for this transaction on chain!
+        <br /><br />If NFTs are still available, you should recieve an airdrop shortly!
         <br />Keep an eye on your wallet...</>
       )
     }
@@ -68,13 +75,13 @@ export default function Home() {
 
 
   }, [pubKey, tokenBalance, ata, connection, provider])
-  const handleReset = useCallback(()=>{
+  const handleReset = useCallback(() => {
     setLoading(false);
     setComplete(false);
     setResultMsg('');
     setTxid('');
     setNotice(<></>);
-  },[])
+  }, [])
   return (
     <>
       <Head>
@@ -92,7 +99,7 @@ export default function Home() {
 
             <div className='result-msg'>{resultMsg}</div>
             {notice}<br /><br />
-            {txid && <>Tx: <a
+            {txid && <>Transaction ID: <a
               href={generateExplorerUrl(txid, 'mainnet-beta')}
               target="_blank"
               rel="noopener noreferrer"
@@ -126,18 +133,21 @@ export default function Home() {
 
         <div className={styles.center}>
           <button
-            className={loading ? 'loading' : 'dog-button'}
+            className={loading ? 'image_wrapper' : 'dog-button image_wrapper'}
             onClick={handleBurn}
             disabled={!isConnected || ((tokenBalance ?? 0) < MIN_BURN_AMT || loading)}
           >
             <Image
               src="/burn.png"
               alt="A burning bonk"
-              className={styles.logo}
+              className={loading ? 'loading' : ''}
               width={400}
               height={400}
               priority
             />
+            <div className="overlay blink">
+              <h3>{loading && 'BURNING'}</h3>
+            </div>
           </button>
           {!isConnected ? <button
             className={styles.card}

@@ -19,11 +19,11 @@
 }
 
 .title {
-  font-size: 2.8em;
+  font-size: 2.6em;
   font-weight: bold;
 }
 .subhead {
-  font-size: 1.4em;
+  font-size: 1.2em;
 }
 
 .description a {
@@ -38,7 +38,7 @@
   margin: 0;
   padding: 1rem;
   background-color: rgba(var(--callout-rgb), 0.5);
-  border: 1px solid rgba(var(--callout-border-rgb), 0.3);
+  border: none;
   border-radius: var(--border-radius);
 }
 
