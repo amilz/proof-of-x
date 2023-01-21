@@ -137,8 +137,7 @@ button {
 
 .modal-content {
   background-color: #d2d2d2ce;
-  margin: 15% auto; /* 15% from the top and centered */
-  padding: 20px;
+  margin: 12% auto; /* 15% from the top and centered */
   border: 1px solid #888;
   color: black;
   width: 40%; /* Could be more or less, depending on screen size */
@@ -151,7 +150,9 @@ button {
 @media (max-width: 777px) {
   .modal-content {
     width: 90%;
-    height: 90%;
+    height: 50%;
+    padding: 20px;
+    margin: 25% auto;
   }
 }
 

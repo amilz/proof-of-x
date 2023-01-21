@@ -64,7 +64,7 @@ export default function Home() {
     }
     catch {
       setResultMsg('💥 BONK! 💥');
-      setNotice(<>Something went wrong with your transaction.
+      setNotice(<>Something went wrong with your transaction.<br />
         <br />Take a breather and try again!</>
       )
     }
