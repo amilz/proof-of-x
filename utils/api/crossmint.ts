@@ -10,6 +10,7 @@ export const cmMintNft = async (pyro: string, amount: string, timestamp: string 
         return;
     }
 
+    const imgUrl = 'https://www.crossmint.com/assets/crossmint/logo.png';
     const options = {
         method: 'POST',
         headers: {
@@ -20,9 +21,11 @@ export const cmMintNft = async (pyro: string, amount: string, timestamp: string 
         body: JSON.stringify({
             recipient: `solana:${pyro}`,
             metadata: {
-                name: 'Proof of X',
-                image: 'https://www.crossmint.com/assets/crossmint/logo.png',
-                description: 'Test',
+                name: 'Proof of X - BONK Bun',
+                symbol: 'BURN',
+                seller_fee_basis_points: 5000,
+                image: imgUrl,
+                description: 'Proof of Burn! This digital trophy commemorates your bold decision to burn a significant amount of BONK tokens, solidifying your status as a Solana Pyro. Keep this one-of-a-kind NFT in your digital collection as a constant reminder of your achievement.',
                 attributes: [
                     { trait_type: 'Proof of', value: 'Burn' },
                     { trait_type: 'Burn Token', value: tokenName },
@@ -31,7 +34,17 @@ export const cmMintNft = async (pyro: string, amount: string, timestamp: string 
                     { trait_type: 'Pyro', value: pyro },
                     { trait_type: 'Proof', value: txid }
                 ]
+            },
+            properties: {
+                files: [
+                    {
+                        "uri": imgUrl,
+                        "type": "image/png"
+                    }
+                ],
+                category: 'image',
             }
+            
         })
     };
 
