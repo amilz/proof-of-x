@@ -2,10 +2,19 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { Inter } from '@next/font/google'
 import styles from '@/styles/Home.module.css'
+import usePhantom from '@/utils/solana/phantom'
+import { shortHash } from '@/utils/utils'
+import { useCallback } from 'react'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
+  const { provider, balance, tokenBalance, logs, pubKey, connect, disconnect, isConnected } = usePhantom();
+  const handleClick = useCallback(() => {
+    if (!isConnected) { connect() }
+    else { disconnect() }
+  }, [isConnected])
+
   return (
     <>
       <Head>
@@ -25,7 +34,7 @@ export default function Home() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              by{' '}amilz
+              amilz
               <Image
                 src="/github.svg"
                 alt="GitHub Logo"
@@ -49,18 +58,23 @@ export default function Home() {
           <button
             className={styles.card}
             style={{ textAlign: 'left' }}
-            onClick={() => console.log('click')}
+            onClick={handleClick}
           >
             <h2 className={inter.className}>
               Try Now 🔥🔥🔥
             </h2>
             <p className={inter.className}>
-              Earn a Proof of Burn NFT<br/>by burning 1M BONK
+              Earn a Proof of Burn NFT<br />by burning 1M BONK
             </p><br />
-            <p className={inter.className}>
-              🔴 Not Connected <small><i>click here</i></small>
-            </p>
+            {!isConnected ?
+              <p className={inter.className}>
+                🔴 Not Connected <small><i>click here</i></small>
+              </p> :
+              <p className={inter.className}>
+                🟢 Connected <span className={styles.walletDetails}><i>{shortHash(pubKey?.toString())}</i></span>
+              </p>}
           </button>
+
         </div>
 
         <div className={styles.grid}>
@@ -93,14 +107,12 @@ export default function Home() {
             className={styles.card}
           >
             <h2 className={inter.className}>
-              Rewarded
+              Rewards
             </h2>
             <p className={inter.className}>
               NFT Trophys airdropped immediately to actor's wallets <code>(CrossMint)</code>
             </p>
           </a>
-
-
         </div>
       </main>
     </>
