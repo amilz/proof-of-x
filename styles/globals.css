@@ -226,3 +226,6 @@ button {
     flex-wrap: wrap;
   }
 }
+.primary {
+  min-width: 300px;
+}

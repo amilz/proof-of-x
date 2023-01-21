@@ -19,6 +19,7 @@ At present (Jan 21, 2023):
     - Base plan is limited to 10s executions (which is only enough time to send a CM request)
     - Pro plan is limited to 60s which is sufficient MOST of the time but I have seen some executions time out 
     - Future phases will have to explore alternatives
+    - Note: The Serverless Function logs will automatically be cut-off if the total size reaches over 4KB. This will require a log drain for future use
 
 
 

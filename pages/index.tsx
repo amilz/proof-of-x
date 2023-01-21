@@ -150,7 +150,7 @@ export default function Home() {
             </div>
           </button>
           {!isConnected ? <button
-            className={styles.card + ' overflow'}
+            className={styles.card + ' overflow primary'}
             onClick={handleClick}
           >
             <h2 className={inter.className}>
