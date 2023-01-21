@@ -21,9 +21,11 @@
 .title {
   font-size: 2.6em;
   font-weight: bold;
+  pointer-events:none;
 }
 .subhead {
   font-size: 1.2em;
+  pointer-events:none;
 }
 @media (max-width: 768px) {
   .title {
@@ -258,14 +260,14 @@
 
   .description div {
     align-items: flex-end;
-    pointer-events: none;
+    pointer-events: auto;
     inset: auto 0 0;
     padding: 2rem;
     height: 200px;
     background: linear-gradient(to bottom,
         transparent 0%,
         rgb(var(--background-end-rgb)) 40%);
-    z-index: 1;
+    z-index: 20;
   }
 }
 
