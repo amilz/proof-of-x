@@ -39,7 +39,7 @@ export default function Home() {
 
         <div className={styles.center}>
           <Image
-            src="/burn2.png"
+            src="/burn.png"
             alt="A burning bonk"
             className={styles.logo}
             width={400}
