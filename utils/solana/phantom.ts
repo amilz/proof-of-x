@@ -87,7 +87,7 @@ function usePhantom() {
             });
             if (!TOKEN_MINT) return;
             getTokenBalance(publicKey, connection, new PublicKey(TOKEN_MINT)).then((balance)=>{
-                console.log('connected. bonk:', balance);
+                console.log('token balance:', balance);
                 setTokenBalance(balance);
             })
             let ata = await getAssociatedTokenAddress(new PublicKey(TOKEN_MINT), publicKey);
