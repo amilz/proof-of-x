@@ -219,3 +219,12 @@ button {
     visibility: hidden;
   }
 }
+
+@media (max-width: 768px) {
+  .overflow {
+    overflow: auto;
+    flex-wrap: wrap;
+  }
+}
+
+

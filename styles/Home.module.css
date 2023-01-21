@@ -25,6 +25,14 @@
 .subhead {
   font-size: 1.2em;
 }
+@media (max-width: 768px) {
+  .title {
+    font-size: 2.4em;
+  }
+  .subhead {
+    font-size: 1em;
+  }
+}
 
 .description a {
   display: flex;
@@ -231,6 +239,7 @@
     justify-content: center;
     position: fixed;
     width: 100%;
+    flex-wrap: wrap;
   }
 
   .description p {
@@ -282,3 +291,9 @@
   font-size: smaller;
 }
 
+@media (max-width: 768px) {
+  .center {
+    flex-direction: column;
+    padding: 0;
+  }
+}
