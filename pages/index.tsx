@@ -21,7 +21,7 @@ export default function Home() {
   const handleClick = useCallback(() => {
     if (!isConnected) { connect() }
     else { disconnect() }
-  }, [isConnected])
+  }, [isConnected, connect, disconnect])
   const handleBurn = useCallback(async () => {
     if (!provider) return;
     if (!pubKey || !ata) return;
@@ -67,7 +67,7 @@ export default function Home() {
     }
 
 
-  }, [pubKey, tokenBalance])
+  }, [pubKey, tokenBalance, ata, connection, provider])
   const handleReset = useCallback(()=>{
     setLoading(false);
     setComplete(false);
@@ -203,7 +203,7 @@ export default function Home() {
               Rewards
             </h2>
             <p className={inter.className}>
-              NFT Trophys airdropped immediately to actor's wallets <code>(CrossMint)</code>
+              NFT Trophys airdropped immediately to actor&apos;s wallets <code>(CrossMint)</code>
             </p>
           </a>
         </div>
