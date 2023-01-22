@@ -82,11 +82,13 @@ export const cmMintStatus = async (id: string, configOpts: MintStatusOptions = {
     };
     try {
         while (!success && numTries < configOpts.maxRetries) {
+            numTries++;
             await wait(configOpts.waitTime);
             let response = await fetch(`https://staging.crossmint.com/api/2022-06-09/collections/default-solana/nfts/${id}`, options)
             let result = (await response.json()) as CmMintResponse;
             if (result.onChain.status === "success") {
                 success = true;
+                console.log(`Returned success after ${numTries} attempt`);
                 return result;
             }
         }
