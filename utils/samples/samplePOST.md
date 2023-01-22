@@ -1,4 +1,4 @@
-curl -X POST "https://proof-of-x-two.vercel.app/api/burn" \
+curl -X POST "http://localhost:3000/api/burn" \
   -H "Content-Type: application/json" \
   -H "authorization: YOUR_AUTH" \
   -d '[
