@@ -9,7 +9,7 @@ This is a serverless function that handles a POST request from Helius on Vercel 
 - If the amount of tokens burned is greater than the `MIN_BURN` constant, we send a call to CrossMint to mint an NFT to the burner or `pyro`.
 
 
-### Potential Limitations
+### Potential Limitations / Known Issues
 
 At present (Jan 21, 2023):
 - Webhooks: 
@@ -20,7 +20,8 @@ At present (Jan 21, 2023):
     - Pro plan is limited to 60s which is sufficient MOST of the time but I have seen some executions time out 
     - Future phases will have to explore alternatives
     - Note: The Serverless Function logs will automatically be cut-off if the total size reaches over 4KB. This will require a log drain for future use
-
+- CM:
+    - I don't believe metadata currently uses [Metaplex's latest standard](https://docs.metaplex.com/programs/token-metadata/token-standard). I think the lack of `properties.files` for the img file causes the NFT to not render on all platforms (e.g., Solana Explorer)
 
 
 ## Getting Started

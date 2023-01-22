@@ -1,0 +1,42 @@
+{
+    "name": "Proof of X - BONK Burn",
+    "symbol": "BURN",
+    "description": "Proof of Burn! This digital trophy commemorates your bold decision to burn a significant amount of BONK tokens, solidifying your status as a Solana Pyro. Keep this one-of-a-kind NFT in your digital collection as a constant reminder of your achievement.",
+    "seller_fee_basis_points": 5000,
+    "image": "https://arweave.net/R1EyodNsavfvduSJ1_ye7G9eOR2_LxlP35Z8SLrg1IQ?ext=png",
+    "attributes": [
+        {
+            "trait_type": "Proof of",
+            "value": "Burn"
+        },
+        {
+            "trait_type": "Burn Token",
+            "value": "BONK"
+        },
+        {
+            "trait_type": "Burn Amount",
+            "value": "10,055,679"
+        },
+        {
+            "trait_type": "wen",
+            "value": "2023-01-18"
+        },
+        {
+            "trait_type": "Pyro",
+            "value": "Cw9PKetp1vodUfbL1whv2wDVTD5f5UhGq5GT6iFg4J1E"
+        },
+        {
+            "trait_type": "Proof",
+            "value": "JWSnRciiny8Z72GdYNcm2uWTa3dzovnuUmx3NqhoGcucSRJbh9yEX9osr5aNKwTwqeoGN6Ykodnqx4dvJ7AJoDR"
+        },
+        {
+            "trait_type": "Variant",
+            "value": 6
+        }
+    ],
+    "properties": {
+        "files": [],
+        "category": "image",
+        "creators": []
+    }
+}
