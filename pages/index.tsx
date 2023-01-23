@@ -165,7 +165,7 @@ export default function Home() {
             </p>
           </button> :
             <button
-              className={styles.card+ ' overflow primary'}
+              className={styles.card + ' overflow primary'}
               onClick={handleClick}
             >
               <h2 className={inter.className}>
@@ -189,7 +189,7 @@ export default function Home() {
               Real Time
             </h2>
             <p className={inter.className}>
-              Websockets trigger on-chain events instantly <br/><code>[Helius]</code>
+              Websockets trigger on-chain events instantly <br /><code>[Helius]</code>
             </p>
           </a>
 
@@ -201,7 +201,7 @@ export default function Home() {
               Verified
             </h2>
             <p className={inter.className}>
-              Rules engine processes and finds qualifying actions <br/><code>[Vercel]</code>
+              Rules engine finds and verifies qualifying actions <br /><code>[Vercel]</code>
             </p>
           </a>
 
@@ -213,7 +213,7 @@ export default function Home() {
               Rewards
             </h2>
             <p className={inter.className}>
-              NFT Trophys airdropped immediately to actor&apos;s wallets <br/><code>[CrossMint]</code>
+              NFT trophies airdropped immediately to actors&apos; wallets <br /><code>[CrossMint]</code>
             </p>
           </a>
         </div>
