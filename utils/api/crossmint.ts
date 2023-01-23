@@ -1,5 +1,6 @@
-import { cleanDate, wait } from "../utils";
+import { cleanDate, getRandomInt, wait } from "../utils";
 import fetch from 'node-fetch';
+import { IMG_URIS } from "../constants";
 
 const CROSS_MINT_SECRET = process.env.CROSS_MINT_SECRET;
 const CROSS_MINT_PROJECT = process.env.CROSS_MINT_PROJECT;
@@ -9,8 +10,8 @@ export const cmMintNft = async (pyro: string, amount: string, timestamp: string 
         console.error('Missing CrossMint credentials')
         return;
     }
-
-    const imgUrl = 'https://www.crossmint.com/assets/crossmint/logo.png';
+    const imgIndex = getRandomInt(0, IMG_URIS.length);
+    const imgUrl = IMG_URIS[imgIndex];
     const options = {
         method: 'POST',
         headers: {
@@ -21,7 +22,7 @@ export const cmMintNft = async (pyro: string, amount: string, timestamp: string 
         body: JSON.stringify({
             recipient: `solana:${pyro}`,
             metadata: {
-                name: 'Proof of X - BONK Bun',
+                name: 'Proof of X - BONK Burn',
                 symbol: 'BURN',
                 seller_fee_basis_points: 5000,
                 image: imgUrl,
@@ -32,7 +33,8 @@ export const cmMintNft = async (pyro: string, amount: string, timestamp: string 
                     { trait_type: 'Burn Amount', value: amount },
                     { trait_type: 'wen', value: cleanDate(timestamp) },
                     { trait_type: 'Pyro', value: pyro },
-                    { trait_type: 'Proof', value: txid }
+                    { trait_type: 'Proof', value: txid },
+                    { trait_type: 'Variant', value: imgIndex.toLocaleString() }
                 ]
             },
             properties: {
@@ -44,7 +46,7 @@ export const cmMintNft = async (pyro: string, amount: string, timestamp: string 
                 ],
                 category: 'image',
             }
-            
+
         })
     };
 
@@ -80,11 +82,13 @@ export const cmMintStatus = async (id: string, configOpts: MintStatusOptions = {
     };
     try {
         while (!success && numTries < configOpts.maxRetries) {
+            numTries++;
             await wait(configOpts.waitTime);
             let response = await fetch(`https://staging.crossmint.com/api/2022-06-09/collections/default-solana/nfts/${id}`, options)
             let result = (await response.json()) as CmMintResponse;
             if (result.onChain.status === "success") {
                 success = true;
+                console.log(`Returned success after ${numTries} attempt`);
                 return result;
             }
         }

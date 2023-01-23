@@ -165,7 +165,7 @@ export default function Home() {
             </p>
           </button> :
             <button
-              className={styles.card+ ' overflow'}
+              className={styles.card+ ' overflow primary'}
               onClick={handleClick}
             >
               <h2 className={inter.className}>
