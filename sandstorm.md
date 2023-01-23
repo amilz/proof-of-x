@@ -15,7 +15,8 @@ Track 1 - NFTs: Proof of X utilizes NFTs to provide proof of authenticity of spe
 Track 2 - Bonking with Bonk!: We give anybody who burns > 1M $BONK a free NFT. Automatically. BONK!
 Track 3 - Automation: Proof of X automates the verification of on-chain activities and the delivery of NFTs as rewards or receipts for such activities. Proof of X utilizes Helius Webhooks and is evaluating opportunities to leverage Clockwork for future offerings. 
 
-### Pitch Deck: Not available
+### Link
+Pitch Deck: https://docs.google.com/presentation/d/1KBQFO9JGEOoRuq47rTfrGOGOH-bnBCx-064QIhGlMjI/
 Live Demo: Go burn 1M $BONK, and you'll get an NFT. That simple! I have created a burn page to do it easily (this front end is separate from the backend that automates your burn verification and NFT minting). [Burn 1M $BONK](https://sandstorm.amilz.com/).
 *NOTE! At present, we are limited to top level Burn instructions (not innner instructions) and limited to Burn, not BurnChecked. If you don't know what that means, I'd recommend using the demo link for your burn (or DM me and I can help you figure it out).
 GitHub Link: https://github.com/amilz/proof-of-x
