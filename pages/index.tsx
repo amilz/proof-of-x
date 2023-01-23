@@ -19,9 +19,10 @@ export default function Home() {
   const [notice, setNotice] = useState<JSX.Element>(<></>);
   const { provider, connection, tokenBalance, pubKey, connect, disconnect, isConnected, ata } = usePhantom();
   const handleClick = useCallback(() => {
+    console.log('clicked');
     if (!isConnected) { connect() }
     else { disconnect() }
-  }, [isConnected, connect, disconnect])
+  }, [isConnected, connect, disconnect, provider, pubKey])
   const handleBurn = useCallback(async () => {
     if (!provider) return;
     if (!pubKey || !ata) return;
