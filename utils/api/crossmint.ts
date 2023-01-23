@@ -24,7 +24,7 @@ export const cmMintNft = async (pyro: string, amount: string, timestamp: string 
             metadata: {
                 name: 'Proof of X - BONK Burn',
                 symbol: 'BURN',
-                seller_fee_basis_points: 5000,
+                seller_fee_basis_points: 500,
                 image: imgUrl,
                 description: 'Proof of Burn! This digital trophy commemorates your bold decision to burn a significant amount of BONK tokens, solidifying your status as a Solana Pyro. Keep this one-of-a-kind NFT in your digital collection as a constant reminder of your achievement.',
                 attributes: [
