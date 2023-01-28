@@ -4,11 +4,10 @@ import { Inter } from '@next/font/google'
 import styles from '@/styles/Home.module.css'
 import usePhantom from '@/utils/solana/phantom'
 import { generateExplorerUrl, shortHash } from '@/utils/utils'
-import { ReactEventHandler, useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { MIN_BURN_AMT, NUM_DECIMALS, TOKEN_MINT } from '@/utils/constants'
 import { createBurnCheckedInstruction, createBurnInstruction } from '@solana/spl-token'
 import { PublicKey, Transaction, TransactionInstruction } from '@solana/web3.js'
-import { background } from '@chakra-ui/react'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -95,6 +94,8 @@ export default function Home() {
     setResultMsg('');
     setTxid('');
     setNotice(<></>);
+    setFormText('1,000,000');
+    setBurnAmt(1000000);
   }, [])
   return (
     <>
