@@ -15,14 +15,26 @@ export default function Home() {
   const [loading, setLoading] = useState<boolean>(false);
   const [complete, setComplete] = useState<boolean>(false);
   const [resultMsg, setResultMsg] = useState<string>('');
+  const [formText, setFormText] = useState<string>('1,000,000');
+  const [burnAmt, setBurnAmt] = useState<number>(1000000);
   const [txid, setTxid] = useState<string>('');
   const [notice, setNotice] = useState<JSX.Element>(<></>);
   const { provider, connection, tokenBalance, pubKey, connect, disconnect, isConnected, ata } = usePhantom();
   const handleClick = useCallback(() => {
     console.log('clicked');
     if (!isConnected) { connect() }
-    else { disconnect() }
-  }, [isConnected, connect, disconnect, provider, pubKey])
+    //else { disconnect() }
+  }, [isConnected, connect])
+
+  const handleTyping = useCallback((e:React.FormEvent<HTMLInputElement>)=>{
+    e.preventDefault();
+    const addCommas = (num:string) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    const removeNonNumeric = (num: string) => num.toString().replace(/[^0-9]/g, "");
+    let typedValue = e.currentTarget.value;
+    setBurnAmt(parseInt(removeNonNumeric(typedValue)) ?? 1000000);
+    console.log('new burn amt', parseInt(removeNonNumeric(typedValue)) ?? 1000000);
+    setFormText(addCommas(removeNonNumeric(typedValue)));
+  },[])
   const handleBurn = useCallback(async () => {
     if (!provider) return;
     if (!pubKey || !ata) return;
@@ -33,7 +45,7 @@ export default function Home() {
       ata,
       new PublicKey(TOKEN_MINT),
       pubKey,
-      MIN_BURN_AMT * (10 ** NUM_DECIMALS)
+      burnAmt * (10 ** NUM_DECIMALS)
     )
     // At the momeont (2023/1/21), Hook does not appear to include BurnChecked
     let burnIxChecked: TransactionInstruction = createBurnCheckedInstruction(
@@ -82,6 +94,8 @@ export default function Home() {
     setResultMsg('');
     setTxid('');
     setNotice(<></>);
+    setFormText('1,000,000');
+    setBurnAmt(1000000);
   }, [])
   return (
     <>
@@ -146,6 +160,7 @@ export default function Home() {
               height={400}
               priority
             />
+
             <div className="overlay blink">
               <h3>{loading && 'BURNING'}</h3>
             </div>
@@ -165,7 +180,7 @@ export default function Home() {
               🔴 Not Connected <br /><span className={styles.walletDetails}><i>click here to connect</i></span>
             </p>
           </button> :
-            <button
+            <div
               className={styles.card + ' overflow primary'}
               onClick={handleClick}
             >
@@ -173,12 +188,17 @@ export default function Home() {
                 {((tokenBalance ?? 0) >= MIN_BURN_AMT) ? '🔥Click Dog to Burn🔥' : 'MORE BONK NEEDED'}
               </h2>
               <p className={inter.className}>
-                Burn 1M BONK -&gt;Get  NFT<br /><i >WARNING: Burn is irreversible</i>
+                Burn 1M+ BONK -&gt;Get  NFT<br /><i >WARNING: Burn is irreversible</i>
               </p><br />
               <p className={inter.className}>
-                🟢 Connected to {shortHash(pubKey?.toString())} <br /><span className={styles.walletDetails}><i>click to disconnect</i></span>
+                🟢 Connected to {shortHash(pubKey?.toString())} <br /><span className={styles.walletDetails}><i></i></span>
               </p>
-            </button>}
+
+              <div className='burn-amt'>
+ 
+              <form>Burn Amt: <input onChange={handleTyping} value={formText}  type={'text'}></input></form>
+              </div>
+            </div>}
 
         </div>
         <div className={styles.grid}>
