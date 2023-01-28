@@ -66,6 +66,7 @@ export default async function handler(
 
   const pyro = burnTx.fromUserAccount; // use the owner of the burned tokens
   const burnAmount = burnTx.tokenAmount.toLocaleString(undefined, { maximumFractionDigits: 0 });
+  const burnQty = burnTx.tokenAmount; // use for tiered rewards
   const { signature, timestamp } = data;
   
   if (burnTx.tokenAmount < MIN_BURN) {
@@ -80,7 +81,7 @@ export default async function handler(
 
   // Step 3 - Mint NFT
   try {
-    let newMint = await cmMintNft(pyro, burnAmount, timestamp, TOKEN_NAME, signature);
+    let newMint = await cmMintNft(pyro, burnAmount, timestamp, TOKEN_NAME, signature, burnQty);
     if (!newMint || !newMint.id) { return response.status(204).json('No response from CM'); };
     if (!newMint.details) { console.log(`New mint not found for ${newMint.id}.`); return response.status(202).json('Mint status unknown'); }
     console.log(`   ✅ Mint: ${newMint.details.onChain.mintHash}`);

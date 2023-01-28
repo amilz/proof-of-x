@@ -30,3 +30,36 @@ export const IMG_URIS: string[] = [
     "https://arweave.net/sggtJ61vSuKJWqUXYPJ_Tdb5Y_-vQrPIOZtPOEFjO-8?ext=png",
     "https://arweave.net/5xDgytUN0YVKOOwi-ayQ4DBEp8HX6wxKPnMmCX0Zfuk?ext=png"
 ];
+
+export const IMG_10M = [
+    "https://arweave.net/yCwiBc6kWC0OWJREjwMS_bt6x0f_4AHpwRHfdDya4bY?ext=png",
+    "https://arweave.net/HeBz713grRBUw4GCFkmVBUb3WPTUFVlpYgS-Ge83uvw?ext=png",
+    "https://arweave.net/nzTco6k5BN4m_XILIfBbgFFgTtUp_dhj5Oj68mZgQd8?ext=png",
+    "https://arweave.net/xIz4AoJuErFRW_fcMuo2gkew4MIC-R0vnW0J6HDBbBo?ext=png",
+    "https://arweave.net/kjejWjciBwrhA1oQw32I3AIWDSoL0AtuIwQ9J_MZ2SY?ext=png",
+    "https://arweave.net/bIbBOGp5p7mvLFYf1MgRmt-oJ3fkG-_63XiqGOOCcds?ext=png",
+    "https://arweave.net/3ymWK_AyUxDv-gCIDJa_3ksNYyT1oSTE9dTHV6ql0u4?ext=png",
+    "https://arweave.net/EVuxMxBfY4DOajkIPwINapDBVf9mKkxrOh0eGvizAEA?ext=png",
+    "https://arweave.net/mB_1L3e5uVqLkNsdxAkSrRXZyXNvjHTOq0WphTwT7l0?ext=png",
+    "https://arweave.net/xmURP6N-00afnp67sVazoH6cpWPjic9UCmiIFQEaGyE?ext=png",
+    "https://arweave.net/VUTODfUvt_xGLnIHIDIqrqLcW5dRV1bNTCtXrmSP_1Q?ext=png",
+    "https://arweave.net/2EneK8VvIbBAHtuM7zApIL4hNgvUOQt2e5aoN6XDbk4?ext=png"
+];
+
+export const IMG_100M = [
+    "https://arweave.net/ct7Is1qs-v9sqPY0ZYhytO13jGpUDc1X0GlDDfWjGQk?ext=png",
+    "https://arweave.net/wFi8kuJuVq3n7DzUdCS1-c8p1qZhR4X0Zm8f1WYWfbA?ext=png",
+    "https://arweave.net/HS3qeL-RZWgYsnU_Ouj8qdUfYPxgAg1xl5bPdOp966U?ext=png",
+    "https://arweave.net/R74zd49t25RhDC25_Ld88RjQ-0LRxlc9iRt7TnEHZOI?ext=png",
+    "https://arweave.net/xIg1v_3F3tiqlI2T_-OOtukEhSBMKKlBYCGR8ADCvMU?ext=png",
+    "https://arweave.net/mIWaC-DsFcT6hokI5bnA3ibSYxQpXMGUiEVTS_HpxL4?ext=png",
+    "https://arweave.net/GtjamlPtjcNhwBeZI4KCOV2y0bBb727z3gcgQKPh9vc?ext=png",
+    "https://arweave.net/8CME_Lej1VsNFnc1o2fMRRrNrFBFiCNt8aIEc5e7Dog?ext=png",
+    "https://arweave.net/sEgjzyiuea6Fck_IvrJZ4LVEbyrVdPxbGkj5kPAjs0s?ext=png",
+    "https://arweave.net/ihaAF7qWj1RiSG_QKD2jQ9ntjrQwsQFst9fxSWIOryk?ext=png",
+    "https://arweave.net/SacRIdi_sKbHyYgkMxUfCOS6vaeADVpFyQ6-yVAVHqU?ext=png",
+    "https://arweave.net/lr7AOfYH1Sxbu6XoetezYtIjIFTwvENszI8vWE9cbU0?ext=png",
+    "https://arweave.net/fd_F5GFXpQhysRlE1bouwa6aF4_6j4uglUVBgaYE3oU?ext=png"
+];
+
+export const IMG_1B = ["https://arweave.net/ntkO4DPMthTKb3FbZMhKfUh7I--EGbjAM4oQ_iXtkd0?ext=png"];
