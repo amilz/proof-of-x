@@ -1,17 +1,52 @@
 import { cleanDate, getRandomInt, wait } from "../utils";
 import fetch from 'node-fetch';
-import { IMG_URIS } from "../constants";
+import { IMG_100M, IMG_10M, IMG_1B, IMG_URIS } from "../constants";
 
 const CROSS_MINT_SECRET = process.env.CROSS_MINT_SECRET;
 const CROSS_MINT_PROJECT = process.env.CROSS_MINT_PROJECT;
 
-export const cmMintNft = async (pyro: string, amount: string, timestamp: string | number, tokenName: string, txid: string) => {
+export const cmMintNft = async (
+    pyro: string,
+    amount: string,
+    timestamp: string | number,
+    tokenName: string,
+    txid: string,
+    burnQty: number
+) => {
     if (!CROSS_MINT_SECRET || !CROSS_MINT_PROJECT) {
         console.error('Missing CrossMint credentials')
         return;
     }
-    const imgIndex = getRandomInt(0, IMG_URIS.length);
-    const imgUrl = IMG_URIS[imgIndex];
+
+
+
+    let imgIndex: number;
+    let indexLabel: string;
+    let imgUrl: string;
+
+
+    if (burnQty < 10000000) {
+        imgIndex = Math.floor(Math.random() * IMG_URIS.length);
+        indexLabel = imgIndex.toString();
+        imgUrl = IMG_URIS[imgIndex];
+    }
+    else if (burnQty < 100000000) {
+        imgIndex = Math.floor(Math.random() * IMG_10M.length);
+        indexLabel = (imgIndex + IMG_URIS.length).toString();
+        imgUrl = IMG_10M[imgIndex];
+    }
+    else if (burnQty < 1000000000) {
+        imgIndex = Math.floor(Math.random() * IMG_100M.length);
+        indexLabel = (imgIndex + IMG_URIS.length + IMG_10M.length).toString();
+        imgUrl = IMG_100M[imgIndex];
+    }
+    else {
+
+        imgIndex = Math.floor(Math.random() * IMG_1B.length);
+        indexLabel = (imgIndex + IMG_URIS.length + IMG_10M.length + IMG_100M.length).toString();
+        imgUrl = IMG_1B[imgIndex];
+    }
+
     const options = {
         method: 'POST',
         headers: {
@@ -34,7 +69,7 @@ export const cmMintNft = async (pyro: string, amount: string, timestamp: string 
                     { trait_type: 'wen', value: cleanDate(timestamp) },
                     { trait_type: 'Pyro', value: pyro },
                     { trait_type: 'Proof', value: txid },
-                    { trait_type: 'Variant', value: imgIndex.toLocaleString() }
+                    { trait_type: 'Variant', value: indexLabel }
                 ]
             },
             properties: {
