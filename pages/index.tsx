@@ -21,7 +21,7 @@ export default function Home() {
   const [notice, setNotice] = useState<JSX.Element>(<></>);
   const { provider, connection, tokenBalance, pubKey, connect, disconnect, isConnected, ata } = usePhantom();
   const handleClick = useCallback(() => {
-    console.log('clicked');
+    return;
     if (!isConnected) { connect() }
     //else { disconnect() }
   }, [isConnected, connect])
@@ -167,17 +167,17 @@ export default function Home() {
           </button>
           {!isConnected ? <button
             className={styles.card + ' overflow primary'}
-            onClick={()=>{if (!isConnected) { connect() }}}
+            onClick={()=>{if (!isConnected) { return; connect() }}}
           >
             <h2 className={inter.className}>
-              Try Now 🔥🔥🔥
+              Phase 1 Ended 🔥🔥🔥
             </h2>
             <p className={inter.className}>
-              Earn a Proof of Burn NFT<br />by burning 1M BONK
+              Check back for updates
             </p><br />
 
             <p className={inter.className}>
-              🔴 Not Connected <br /><span className={styles.walletDetails}><i>click here to connect</i></span>
+              🔴 Not Connected <br /><span className={styles.walletDetails}><i>connect disabled</i></span>
             </p>
           </button> :
             <div
